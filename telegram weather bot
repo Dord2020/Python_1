@@ -1,0 +1,14 @@
+import telebot
+
+bot = telebot.TeleBot("YOUR_BOT_TOKEN")
+
+@bot.message_handler(commands=["погода"])
+def get_weather(message):
+    city = message.text.split()[1]
+
+    weather_data = requests.get("https://api.openweathermap.org/data/2.5/weather?q={}&appid=YOUR_API_KEY".format(city))
+    weather = weather_data.json()["weather"][0]
+
+    bot.send_message(message.chat.id, "У {} сьогодні {} {}°C".format(city, weather["main"]["description"], weather["main"]["temp"]))
+
+bot.polling()
